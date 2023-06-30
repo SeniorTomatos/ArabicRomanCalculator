@@ -63,7 +63,7 @@ public class Main {
     public static long romanCalc(String[] s) throws Exception {
         if (valueOf(s[0]).getValue() > 10 || valueOf(s[2]).getValue() > 10 || valueOf(s[0]).getValue() < 1 ||
                 valueOf(s[2]).getValue() < 1) {
-            throw new Exception("числа не должны выходить за диапозон [I-X]");
+            throw new Exception("вводимые числа не должны выходить за диапозон [I-X]");
         }
 
         switch (s[1]) {

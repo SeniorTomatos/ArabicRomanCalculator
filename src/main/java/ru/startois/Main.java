@@ -3,10 +3,10 @@ package ru.startois;
 import ru.startois.arithmetic.ArithmeticOperations;
 import ru.startois.arithmetic.ArithmeticOperationsImpl;
 import ru.startois.romanPart.ArabicToRomanConverter;
+import ru.startois.romanPart.RomanNum;
 
 import java.util.Scanner;
 
-import static ru.startois.romanPart.RomanNum.valueOf;
 
 public class Main {
 
@@ -32,10 +32,13 @@ public class Main {
     }
 
     public static void calculator(String[] s) throws Exception {
-        if (s[0].matches("\\d+") && s[2].matches("\\d+")) {
+        if (s.length > 3) {
+            throw new Exception("формат математической операции не удовлетворяет заданию - два операнда и один " +
+                    "оператор (+, -, /, *)");
+        } else if (s[0].matches("-?\\d+") && s[2].matches("-?\\d+")) {
             System.out.printf("Ответ: %d", (arabicCalc(s)));
         } else if (s[0].matches("\\d+") && !s[2].matches("\\d+") || !s[0].matches("\\d+") &&
-                s[2].matches("\\d+")){
+                s[2].matches("\\d+")) {
             throw new Exception("используются одновременно разные системы счисления");
         } else {
             System.out.printf("Ответ: %s", romanConverter.arabicToRoman(romanCalc(s)));
@@ -44,15 +47,20 @@ public class Main {
 
 
     public static long arabicCalc(String[] s) throws Exception {
+        int num1 = Integer.parseInt(s[0]);
+        int num2 = Integer.parseInt(s[2]);
+        if (num1 > 10 || num2 > 10 || num1 < 1 || num2 < 1) {
+            throw new Exception("вводимые числа не должны выходить за диапозон [1-10]");
+        }
         switch (s[1]) {
             case "+":
-                return operations.sum(Integer.parseInt(s[0]), Integer.parseInt(s[2]));
+                return operations.sum(num1, num2);
             case "-":
-                return operations.sub(Integer.parseInt(s[0]), Integer.parseInt(s[2]));
+                return operations.sub(num1, num2);
             case "*":
-                return operations.multiply(Integer.parseInt(s[0]), Integer.parseInt(s[2]));
+                return operations.multiply(num1, num2);
             case "/":
-                return operations.division(Integer.parseInt(s[0]), Integer.parseInt(s[2]));
+                return operations.division(num1, num2);
             default:
                 throw new Exception("формат математической операции не удовлетворяет заданию - два операнда и один " +
                         "оператор (+, -, /, *)");
@@ -61,20 +69,24 @@ public class Main {
 
 
     public static long romanCalc(String[] s) throws Exception {
-        if (valueOf(s[0]).getValue() > 10 || valueOf(s[2]).getValue() > 10 || valueOf(s[0]).getValue() < 1 ||
-                valueOf(s[2]).getValue() < 1) {
+
+        RomanNum num1 = RomanNum.valueOf(s[0]);
+        RomanNum num2 = RomanNum.valueOf(s[2]);
+
+        if (num1.getValue() > 10 || num2.getValue() > 10 || num1.getValue() < 1 ||
+                num2.getValue() < 1) {
             throw new Exception("вводимые числа не должны выходить за диапозон [I-X]");
         }
 
         switch (s[1]) {
             case "+":
-                return operations.sum(valueOf(s[0]).getValue(), valueOf(s[2]).getValue());
+                return operations.sum(num1.getValue(), num2.getValue());
             case "-":
-                return operations.sub(valueOf(s[0]).getValue(), valueOf(s[2]).getValue());
+                return operations.sub(num1.getValue(), num2.getValue());
             case "*":
-                return operations.multiply(valueOf(s[0]).getValue(), valueOf(s[2]).getValue());
+                return operations.multiply(num1.getValue(), num2.getValue());
             case "/":
-                return operations.division(valueOf(s[0]).getValue(), valueOf(s[2]).getValue());
+                return operations.division(num1.getValue(), num2.getValue());
             default:
                 throw new Exception("формат математической операции не удовлетворяет заданию - два операнда и один " +
                         "оператор (+, -, /, *)");
